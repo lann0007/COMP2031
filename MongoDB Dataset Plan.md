@@ -1,6 +1,8 @@
 ﻿# MongoDB Dataset Plan 
 
-**sample\_analytics**
+**Using the database "sample\_analytics"**
+
+<br><br>
 
 **accounts** 
 
@@ -12,13 +14,15 @@ limit : integer which may be the daily withdrawal limit on the account (unsure)
 
 products : array, which may contain any of the following strings: “Derivatives”, “InvestmentStock”, “Commodity”, “Brokerage”, “CurrencyService”, “InvestmentFund”
 
+<br><br>
+
 **customers** 
 
 \_id : ObjectId which can be used to identify this entry in the accounts dataset
 
 username : username String
 
-name: full name String
+name : full name String
 
 address : address String
 
@@ -36,7 +40,7 @@ tier\_and\_details : Object which contains an \_id for each account that the use
 
 `		`tier : tier String
 
-`		`id: ID String  
+`		`id : ID String  
 
 `		`active : account status Boolean 
 
@@ -45,7 +49,7 @@ benefits : User account benefits Array
 `	`0, 1, 2 … : User benefits string (e.g. “sports tickets”)
 
 
-
+<br><br>
 
 **transactions** 
 
@@ -61,7 +65,7 @@ bucket\_end\_date : Possibly end of recorded transactions Date (unsure)
 
 transactions : An Array of Objects, where each object is a transaction
 
-`	`date: transaction Date
+`	`date : transaction Date
 
 `	`amount : amount of units in transaction Integer
 
