@@ -1,6 +1,6 @@
 install.packages("mongolite")
-install.packages("tidyverse")
-install.packages("lubridate") 
+install.packages("tidyverse", dependencies = T)
+install.packages("lubridate")
 install.packages("ggplot2")
 
 
