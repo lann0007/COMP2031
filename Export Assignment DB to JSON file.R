@@ -19,10 +19,15 @@ accounts_collection$count()
 #View(accounts_collection)
 
 #dump database for analysis 
-accounts_collection$export(file("dump.json"))
+#accounts_collection$export(file("dump.json"))
 
 #import database back to mongodb 
-accounts_collection$import(file("dump.json"))
+#accounts_collection$import(file("dump.json"))
+
+
+# This is a test commit using VSCode and Github Desktop 
+
+
 
 
 
