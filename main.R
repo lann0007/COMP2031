@@ -11,6 +11,7 @@ library(lubridate)
 library(ggplot2)
 library(mongolite)
 
+
 connection_string = 'mongodb+srv://Lann0007:zw7Bi5ikPUbmwrqz@comp2031.x9dfsly.mongodb.net/?retryWrites=true&w=majority'
 
 
