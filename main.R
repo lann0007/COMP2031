@@ -2,9 +2,10 @@ install.packages("mongolite")
 install.packages("tidyverse", dependencies = T)
 install.packages("lubridate")
 install.packages("ggplot2")
+install.packages("stringr")
 
 
-
+library(stringr)
 library(tidyverse)
 library(lubridate)
 library(ggplot2)
@@ -14,18 +15,26 @@ connection_string = 'mongodb+srv://Lann0007:zw7Bi5ikPUbmwrqz@comp2031.x9dfsly.mo
 
 
 
-db_accounts = mongo(collection= "accounts", db = "sample_analytics", url = connection_string)
+customer_entries = mongo(collection= "customers", db = "sample_analytics", url = connection_string)
 
 trips_collection = mongo(collection="trips", db="sample_training", url=connection_string)
 
 
 
-account_types = db_accounts$aggregate('[{"$group":{"_id":"$limit", "Count": {"$sum":1}}}]')
+account_types = customer_entries$aggregate('[{"$project":{"name": 1 ,"address": 1 }}]')
 
 user_types = trips_collection$aggregate('[{"$group":{"_id":"$usertype", "Count": {"$sum":1}}}]')
 
 df <- as.data.frame(account_types)
 df
+
+df[,2:3] <- str_split_fixed(df$address, ", ", 2)
+df[,3:4] <- str_split_fixed(df$address, " ", 2)
+df
+
+table2 = df[,3][nchar(df[,3]) == 2]
+
+table2 = table2$aggregate('[{"$group":{"Count: {$sum:1}"}}]')
 
 ggplot(df,aes(x=reorder(`_id`,Count),y=Count))+
   geom_bar(stat="identity",color='green',fill='transparent')+geom_text(aes(label = Count), color = "red") +coord_flip()+xlab("User Type")
