@@ -29,6 +29,8 @@ transactions_collection = mongo(collection = "transactions", db = "sample_analyt
 
 #Export the collections as a JSON file for processing - This will save the database to a file on your local machine
 accounts_collection$export(file("accounts_collection.json"))
+customers_collection$export(file("customers_collection.json"))
+transactions_collection$export(file("transactions_collection.json"))
 
 
 # *** You can ignore the following lines up to line 44 : 
@@ -123,4 +125,40 @@ table(accounts_collection$V7)
 table(accounts_collection$V8)
 
 #From here we can work out most popular products, link to other columns etc...
+
+# ***
+#
+# Before running the code in the next 4 lines, click "Import Dataset" in the top right hand 
+# corner of your screen and select "customers_collection.json". Leave the settings
+# on default and click import.
+#
+# ***
+
+#Renaming columns in customers_collection
+customers_collection <- rename(customers_collection, "id" = V1)
+customers_collection <- rename(customers_collection, "username" = V2)
+customers_collection <- rename(customers_collection, "fullname" = V3)
+customers_collection <- rename(customers_collection, "address" = V4)
+customers_collection <- rename(customers_collection, "birthdate" = V5)
+customers_collection <- rename(customers_collection, "email" = V6)
+customers_collection <- rename(customers_collection, "accounts" = V7)
+
+
+#Remove unwanted characters in customers_collection 
+
+customers_collection$accounts <- gsub(" active : ", "", customers_collection$accounts, fixed = FALSE)
+customers_collection$accounts <- gsub("accounts : \\[ ", "", customers_collection$accounts, fixed = FALSE)
+customers_collection$email <- gsub(" email : ", "", customers_collection$email, fixed = FALSE)
+customers_collection$birthdate <- gsub(" birthdate : \\{ \\$date : ", "", customers_collection$birthdate, fixed = FALSE)
+customers_collection$birthdate <- gsub(" \\Z}", "", customers_collection$birthdate, fixed = FALSE)
+customers_collection$address <- gsub(r"(\\n)", " ", customers_collection$address, fixed = FALSE)
+customers_collection$address <- gsub(" address : ", "", customers_collection$address, fixed = FALSE)
+customers_collection$fullname <- gsub(" name : ", "", customers_collection$fullname, fixed = FALSE)
+customers_collection$username <- gsub(" username : ", "", customers_collection$username, fixed = FALSE)
+customers_collection$id <- gsub("\\{ \\_id : \\{ \\$oid : ", "", customers_collection$id, fixed = FALSE)
+customers_collection$id <- gsub(" \\}", "", customers_collection$id, fixed = FALSE)
+
+
+
+
 
