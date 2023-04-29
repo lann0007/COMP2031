@@ -29,13 +29,13 @@ user_types = trips_collection$aggregate('[{"$group":{"_id":"$usertype", "Count":
 df <- as.data.frame(account_types)
 df
 
-
+#removing unnecessary lines from the table (we're really only after the locations of each given account)
 df[ , 2:3] <- str_split_fixed(df$address, ", ", 2)
 df[ , 3:4] <- str_split_fixed(df$address, " ", 2)
 addresses <- df[,3:4]
 
 vec <- c()
-
+# filter out rows with empty address entries
 for (i in 1:nrow(addresses)){
   count = 0
   if(addresses[i, 1] == "" || nchar(addresses[i,1]) > 2){
@@ -45,11 +45,13 @@ for (i in 1:nrow(addresses)){
     vec <- append(vec, i)
   }
 }
-
+#assign a new data frame the address values excluding the empty entries
 another_df <- addresses[-vec, ]
 another_df
 
-counts <- table(another_df$address)
 
+#table transformation of just the addresses
+counts <- table(another_df$address)
+# resulting tallies of each state that the accounts reside from
 barplot(counts, main="distribution of customers across different states",
         xlab = "States", las = 2)
