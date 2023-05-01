@@ -34,6 +34,7 @@ for (i in 1:nrow(addresses)){
     vec <- append(vec, i)
   }
 }
+
 addresses[487, 1] == ""
 vec
 addresses[c("second section")]
