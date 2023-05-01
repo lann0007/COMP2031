@@ -9,10 +9,7 @@ library(mongolite)
 
 
 connection_string = 'mongodb+srv://smul0002:2V9NiiU6spHC2Gkz@cluster0.tfzpkuq.mongodb.net/?retryWrites=true&w=majority'
-
 transactions_collection = mongo(collection = "transactions", db = "sample_analytics", url = connection_string)
-
-
 
 transaction_types = transactions_collection$aggregate('[{"$project": {"transactions": 1}}]')
 
@@ -22,7 +19,6 @@ df <- as.data.frame(transaction_types)
 list <- c()
 for (i in 1:nrow(df)) {
   temp <- as.data.frame(df[[2]][[i]])
-  
   list <- rbind(list,(temp[,2:4]))
 }
 
