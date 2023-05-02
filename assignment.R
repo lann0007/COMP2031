@@ -14,7 +14,7 @@ library(stringr)
 
 # The connection string is defined, and three collections are created:
 
-connection_string <- "mongodb+srv://mcqu0098:JagEM2aYWWwT3gQ@cluster0.dmyz9kd.mongodb.net/?retryWrites=true&w=majority"
+connection_string = 'mongodb+srv://Lann0007:zw7Bi5ikPUbmwrqz@comp2031.x9dfsly.mongodb.net/?retryWrites=true&w=majority'
 accounts_collection <- mongo(collection = "accounts", db = "sample_analytics", url = connection_string)
 customers_collection <- mongo(collection = "customers", db = "sample_analytics", url = connection_string)
 transactions_collection <- mongo(collection = "transactions", db = "sample_analytics", url = connection_string)
@@ -37,7 +37,7 @@ transactions_collection$export(file("transactions_collection.json"))
 # *** You can ignore the following lines up to line 44 :
 
 # Import database back to mongodb - Not currently used
-# accounts_collection$import(file("accounts_collection.json"))
+accounts_collection$import(file("accounts_collection.json"))
 
 # Query for finding the buy transactions is:
 # {"transactions.transaction_code":"buy"}
