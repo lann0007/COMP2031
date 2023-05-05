@@ -33,6 +33,8 @@ df_table
 df_account <- as.data.frame(df_table)
 df_account
 
+
+
 df_yahoo <-filter(df_account, df_account$Var2 == "yahoo.com")
 df_gmail <- filter(df_account, df_account$Var2 == "gmail.com")
 df_hotmail <- filter(df_account, df_account$Var2 == "hotmail.com")
@@ -41,9 +43,9 @@ df_yahoo <- subset(df_yahoo, select = -c(Var2))
 df_gmail <- subset(df_gmail, select = -c(Var2))
 df_hotmail <- subset(df_hotmail, select = -c(Var2))
 
-barplot(height = df_yahoo$Freq, ylim = c(0,10),name = df_yahoo$Var1, las =2)
-barplot(height = df_gmail$Freq, ylim = c(0,10), name = df_yahoo$Var1, las =2)
-barplot(height = df_hotmail$Freq, ylim = c(0,10), name = df_yahoo$Var1, las =2)
+barplot(height = df_yahoo$Freq[order(df_yahoo$Freq)], ylim = c(0,10),name = df_yahoo$Var1, las =2)
+barplot(height = df_gmail$Freq[order(df_gmail$Freq)], ylim = c(0,10), name = df_yahoo$Var1, las =2)
+barplot(height = df_hotmail$Freq[order(df_hotmail$Freq)], ylim = c(0,10), name = df_yahoo$Var1, las =2)
 
 
 # df_account_grp <- df_account %>% group_by(df_account$Var1, df_account$Var2)
