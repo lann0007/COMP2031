@@ -66,48 +66,48 @@ df_yahoo
 ################################
 
 
+                            
+# dataset <- df_yahoo
 
-dataset <- df_yahoo
+# validation_index <- createDataPartition(dataset$Freq, p=0.80, list=FALSE)
+# # select 20% of the data for validation
+# validation <- dataset[-validation_index,]
+# # use the remaining 80% of data to training and testing the models
+# dataset <- dataset[validation_index,]
+# # dimension of the dataset
+# dim(dataset)
 
-validation_index <- createDataPartition(dataset$Freq, p=0.80, list=FALSE)
-# select 20% of the data for validation
-validation <- dataset[-validation_index,]
-# use the remaining 80% of data to training and testing the models
-dataset <- dataset[validation_index,]
-# dimension of the dataset
-dim(dataset)
+# sapply(dataset, class)
 
-sapply(dataset, class)
+# head(dataset)
 
-head(dataset)
+# levels(dataset$Freq)
 
-levels(dataset$Freq)
+# percentage <- prop.table(table(dataset$Freq)) * 100
+# cbind(freq=table(dataset$Freq), percentage=percentage)
 
-percentage <- prop.table(table(dataset$Freq)) * 100
-cbind(freq=table(dataset$Freq), percentage=percentage)
+# summary(dataset)
 
-summary(dataset)
+# x <- dataset[,1]
+# y <- dataset[,2]
 
-x <- dataset[,1]
-y <- dataset[,2]
+# par(mfrow=c(1,54))
 
-par(mfrow=c(1,54))
+# control <- trainControl(method = "cv", number=10)
+# metric <- "Accuracy"
 
-control <- trainControl(method = "cv", number=10)
-metric <- "Accuracy"
+# set.seed(7)
+# str(x)
+# fit.lda <- train(Freq~., data = dataset, method = "rf", trControl = control)
+# summary(fit.lda)
+# plot(y)
 
-set.seed(7)
-str(x)
-fit.lda <- train(Freq~., data = dataset, method = "rf", trControl = control)
-summary(fit.lda)
-plot(y)
+# predictions <- predict(fit.lda, validation)
 
-predictions <- predict(fit.lda, validation)
-
-head(predictions)
-head(validation$Freq)
-confusionMatrix(predictions, validation)
-sum(df_yahoo$Freq)
+# head(predictions)
+# head(validation$Freq)
+# confusionMatrix(predictions, validation)
+# sum(df_yahoo$Freq)
 # representation of the same data in a pie chart. It doesn't really show much but it is however
 # another representation that can be used
 # Note: currently showing for df_yahoo, change would have to be specified in the line below
