@@ -1,1 +1,11 @@
+# to count amount of 'buy'
+df_buy <- as.data.frame(transactions_collection)
+buy <- apply(df_buy, 2, grepl, pattern = "buy")
+buy_count <- table(buy)
+barplot(buy, main = "Buy Count", xlab = "Column", ylab = "Count")
 
+# to count amount of 'sell'
+df_sell <- as.data.frame(transactions_collection)
+sell <- apply(df_sell, 2, grepl, pattern = "sell")
+sell_count <- table(sell)
+barplot(sell, main = "Sell Count", xlab = "Column", ylab = "Count")
