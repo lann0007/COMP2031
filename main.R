@@ -22,7 +22,7 @@ trips_collection = mongo(collection="trips", db="sample_training", url=connectio
 
 
 
-account_types = customer_entries$aggregate('[{"$project":{"name": 1 ,"address": 1 }}]')
+account_types = customer_entries$aggregate('[{"$project":{"name": 1 ,"count": {"$sum": 1} }}]')
 
 user_types = trips_collection$aggregate('[{"$group":{"_id":"$usertype", "Count": {"$sum":1}}}]')
 
