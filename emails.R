@@ -3,7 +3,8 @@ library(tidyverse)
 library(lubridate)
 library(ggplot2)
 library(mongolite)
-
+library(lessR)
+install.packages("lessR")
 connection_string = 'mongodb+srv://Lann0007:zw7Bi5ikPUbmwrqz@comp2031.x9dfsly.mongodb.net/?retryWrites=true&w=majority'
 
 
@@ -35,7 +36,7 @@ df_account
 
 
 
-df_yahoo <-filter(df_account, df_account$Var2 == "yahoo.com")
+df_yahoo <- filter(df_account, df_account$Var2 == "yahoo.com")
 df_gmail <- filter(df_account, df_account$Var2 == "gmail.com")
 df_hotmail <- filter(df_account, df_account$Var2 == "hotmail.com")
 
@@ -43,6 +44,21 @@ df_yahoo <- subset(df_yahoo, select = -c(Var2))
 df_gmail <- subset(df_gmail, select = -c(Var2))
 df_hotmail <- subset(df_hotmail, select = -c(Var2))
 
+df_yahoo
+sum(df_yahoo$Freq)
+# representation of the same data in a pie chart. It doesn't really show much but it is however
+# another representation that can be used
+# Note: currently showing for df_yahoo, change would have to be specified in the line below
+PieChart(df_yahoo$Freq, hole = 0, values = "%", data = df_yahoo$Freq, fill = 1:54, main = "")
+pie = ggplot(df_yahoo, aes(x="", y=Freq, fill=Var1 )) + geom_bar(stat="identity", width=1)
+pie = pie + coord_polar("y", start=0) + geom_text(aes(label = paste0(round((Freq/sum(Freq))*100), "%")), position = position_stack(vjust = 0.5))
+pie = pie + labs(x = NULL, y = NULL, fill = NULL, title = "Phones - Market Share")
+# Tidy up the theme
+pie = pie + theme_classic() + theme(axis.line = element_blank(),
+          axis.text = element_blank(),
+          axis.ticks = element_blank(),
+          plot.title = element_text(hjust = 0.5, color = "#666666"))
+pie
 barplot(height = df_yahoo$Freq[order(df_yahoo$Freq)], ylim = c(0,10),name = df_yahoo$Var1, las =2)
 barplot(height = df_gmail$Freq[order(df_gmail$Freq)], ylim = c(0,10), name = df_yahoo$Var1, las =2)
 barplot(height = df_hotmail$Freq[order(df_hotmail$Freq)], ylim = c(0,10), name = df_yahoo$Var1, las =2)
