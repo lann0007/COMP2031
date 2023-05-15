@@ -4,6 +4,7 @@ library(lubridate)
 library(ggplot2)
 library(mongolite)
 library(modelr)
+library(data.table)
 
 options(na.action =  na.warn)
 
@@ -69,20 +70,33 @@ df_ages$address
 rename(df_ages, age = birthdate)
 df_ages$birthdate <- format(df_ages$birthdate, format="%Y")
 
-for (i in 1:nrow(df_ages)){
-    df_ages$birthdate[i] <- 2023 - strtoi(df_ages$birthdate[i])
-}
+df_total <- sum
 
 # another useless example, moving on. realised I need to grab each accounts first transaction rather than
 # peoples age lol
 
+# pull the data using mongo
 transaction_entries = mongo(collection = "transactions", db = "sample_analytics", url = connection_string)
 transaction_dates <- transaction_entries$aggregate('[{"$project": {"bucket_start_date": 1, "bucket_end_date": 1}}]')
 
 df_dates <- as.data.frame(transaction_dates)
 
+#since we're comparing between yearly memberships, only part of relevance from the buckets is the year
 df_dates$bucket_start_date <- format(df_dates$bucket_start_date, format="%Y")
 df_dates$bucket_end_date <- format(df_dates$bucket_end_date, format="%Y")
-df_dates
 
-df_dates$bucket_start_date[order(df_dates$bucket_start_date)]
+#to integer for comparisons
+df_dates$bucket_start_date <- strtoi(df_dates$bucket_start_date)
+df_dates$bucket_end_date <- strtoi(df_dates$bucket_end_date)
+
+#create new dataframe
+Year <- c(1966:2016)
+Count <- rep(0,51)
+
+df_total <- data.frame(Year, Count)
+
+#check for "active" members that have an account, total up the amount of active accounts each year
+for (i in 1:51){
+df_total[i,2] <- count(subset(df_dates, df_dates$bucket_start_date <= i+1965 & df_dates$bucket_end_date > i+1965))
+}
+df_total
