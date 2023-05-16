@@ -99,4 +99,14 @@ df_total <- data.frame(Year, Count)
 for (i in 1:51){
 df_total[i,2] <- count(subset(df_dates, df_dates$bucket_start_date <= i+1965 & df_dates$bucket_end_date > i+1965))
 }
-df_total
+
+df_years_mod <- lm(df_total$Count ~ df_total$Year, data = df_total)
+coef(df_years_mod)
+
+grid <- df_total %>% data_grid(Year)
+grid <- grid %>% add_predictions(df_years_mod)
+grid
+
+ggplot(df_total, aes(Year)) + 
+    geom_point(aes(y = Count)) + 
+    geom_point(data = grid, aes(y=pred), colour="red", size=4)
