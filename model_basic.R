@@ -121,8 +121,20 @@ ggplot(df_total, aes(Year)) +
     geom_point(data = grid, aes(y=pred), colour="red", size=4)
 
 
+# Measure performance through the calculating RMSE
+sim1 <- df_total %>%
+  add_predictions(df_years_mod)
+View(sim1)
+df_total
 
-#K-Means Clustering
+rmse(sim1$Count, sim1$pred)
+
+
+
+##################
+##### K-Means Clustering
+#################
+
 set.seed(2)
 df_cluster <- kmeans(df_total[,1:2], center=4, nstart=50)
 
@@ -142,8 +154,10 @@ view(df_total)
 
 ggplot(df_total, aes(Year,Count)) + geom_point(aes(col=Cluster), size = 4)
 
+##################
+##### K-Medoid Clustering
+#################
 
-# K-Medoid Clustering
 PAM = pam(df_shortened, 4, metric = "euclidean", stand = FALSE)
 fviz_nbclust(df_shortened, pam, method = "wss")
 gap_stat <- clusGap(df_shortened,
@@ -155,7 +169,9 @@ fviz_gap_stat(gap_stat)
 
 fviz_cluster(PAM, data = df_shortened)
 
-# Heirarchical Clustering
+##################
+##### Heirarchical Clustering
+#################
 
 m <- c( "average", "single", "complete", "ward")
 names(m) <- c( "average", "single", "complete", "ward")
