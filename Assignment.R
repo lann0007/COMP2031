@@ -15,7 +15,7 @@ library(rjson)
 
 #The connection string is defined, and three collections are created:
 
-connection_string = 'mongodb+srv://mcqu0098:JagEM2aYWWwT3gQ@cluster0.dmyz9kd.mongodb.net/?retryWrites=true&w=majority'
+connection_string = 'mongodb+srv://adminUser:vWVNvtbhPUXWH5yx@comp2031-8031.7mqmz4n.mongodb.net/?retryWrites=true&w=majority'
 accounts_collection = mongo(collection = "accounts", db = "sample_analytics", url = connection_string)
 customers_collection = mongo(collection = "customers", db = "sample_analytics", url = connection_string)
 transactions_collection = mongo(collection = "transactions", db = "sample_analytics", url = connection_string)
@@ -53,7 +53,7 @@ transactions_collection$export(file("transactions_collection.json"))
 
 #View(customers_collection)
 
-#View(transactions_collection)
+View(transactions_collection)
 
 
 
@@ -307,3 +307,7 @@ transactions_collection$transaction_code_8 <- gsub(" transaction_code : ", "", t
 #Count how many occurrences are in each column 
 #Example query:
 table(transactions_collection$symbol)
+
+
+
+
