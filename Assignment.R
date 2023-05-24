@@ -1,6 +1,8 @@
-#install.packages("mongolite")
-#install.packages("tidyverse")
-#install.packages("rjson",  dependencies = T)
+
+install.packages("rtools")
+install.packages("mongolite")
+install.packages("tidyverse")
+install.packages("rjson",  dependencies = T)
 
 #The following libraries are used:
 #Mongolite - database connection and export
