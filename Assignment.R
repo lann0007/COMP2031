@@ -24,7 +24,7 @@ transactions_collection = mongo(collection = "transactions", db = "sample_analyt
 
 #accounts_collection$count()
 #customers_collection$count()
-#transactions_collection$count()
+transactions_collection$count()
 
 #View the available functions in mongolite - use this if you want to see what functions are available 
 #View(accounts_collection)
