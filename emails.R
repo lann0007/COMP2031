@@ -25,13 +25,9 @@ for (i in 1:nrow(df_account)){
     df_account$address[i] <- str_extract(df_account$address[i], "\\b[A-Z]{2}\\b", group = NULL) 
 }
 
-df_account
-
 df_table <- table(df_account$address, df_account$email)
-df_table
 
 df_account <- as.data.frame(df_table)
-df_account
 
 
 
@@ -66,7 +62,7 @@ df_yahoo
 ################################
 
 
-                            
+
 # dataset <- df_yahoo
 
 # validation_index <- createDataPartition(dataset$Freq, p=0.80, list=FALSE)
@@ -111,8 +107,10 @@ df_yahoo
 # representation of the same data in a pie chart. It doesn't really show much but it is however
 # another representation that can be used
 # Note: currently showing for df_yahoo, change would have to be specified in the line below
-PieChart(df_gmail$Freq, hole = 0, values = "%", data = df_gmail$Freq, fill = 1:54, main = "")
-pie = ggplot(df_hotmail, aes(x="", y=Freq, fill=Var1 )) + geom_bar(stat="identity", width=1)
+
+
+PieChart(df_yahoo$Freq, hole = 0, values = "%", data = df_yahoo$Freq, fill = 1:54, main = "")
+pie = ggplot(df_yahoo, aes(x="", y=Freq, fill=Var1 )) + geom_bar(stat="identity", width=1)
 pie = pie + coord_polar("y", start=0) + geom_text(aes(label = paste0(round((Freq/sum(Freq))*100), "%")), position = position_stack(vjust = 0.5))
 pie = pie + labs(x = NULL, y = NULL, fill = NULL, title = "Hotmail users across America")
 # Tidy up the theme

@@ -7,6 +7,8 @@ library(modelr)
 library(data.table)
 library(Metrics)
 library(factoextra)
+install.packages("rstatix")
+install.packages("factoextra")
 library(cluster)
 
 options(na.action =  na.warn)
@@ -108,18 +110,44 @@ for (i in 1:51){
 df_total[i,2] <- count(subset(df_dates, df_dates$bucket_start_date <= i+1965 & df_dates$bucket_end_date > i+1965))
 }
 
-df_years_mod <- glm(df_total$Count ~ df_total$Year, data = df_total)
+dt = sample(nrow(df_total), nrow(df_total)*.8)
+train<-df_total[dt,]
+test<-df_total[-dt,]
+
+#training and modelling of linear regression model glm
+df_years_mod <- glm(Count ~ Year, data = train)
+summary(glm(Count ~ Year, data = train))
 coef(df_years_mod)
+
+predicted_glim <- predict(df_years_mod, test, type = 'response')
+
+grid <- df_total %>% data_grid(Year)
+grid <- grid %>% add_predictions(df_years_mod)
+grid
+
+plot(test$Year,predicted_glim )
+
+rmse(predicted_glim, test$Year)
+
+#(df_total, aes(Year)) + 
+ #   geom_point(aes(y = Count)) + 
+  #  geom_point(data = grid, aes(y=pred), colour="red", size=4)
+
+#training and modelling of linear model lm
+
+df_years_mod_lin <- lm(Count ~ Year, data = train)
+coef(df_years_mod)
+
+predicted_lim <- predict(df_years_mod_lin, test, type = 'response')
 
 
 grid <- df_total %>% data_grid(Year)
 grid <- grid %>% add_predictions(df_years_mod)
 grid
 
-ggplot(df_total, aes(Year)) + 
-    geom_point(aes(y = Count)) + 
-    geom_point(data = grid, aes(y=pred), colour="red", size=4)
+plot(test$Year,predicted_lim )
 
+rmse(predicted_lim, test$Year)
 
 # Measure performance through the calculating RMSE
 sim1 <- df_total %>%
@@ -139,7 +167,7 @@ set.seed(2)
 df_cluster <- kmeans(df_total[,1:2], center=4, nstart=50)
 
 df_cluster
-
+df_shortened
 df_shortened <- df_total[,1:2]
 #required libraries for visualisation
 library(ggsignif)
