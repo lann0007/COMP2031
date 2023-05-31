@@ -111,10 +111,10 @@ df_yahoo
 # representation of the same data in a pie chart. It doesn't really show much but it is however
 # another representation that can be used
 # Note: currently showing for df_yahoo, change would have to be specified in the line below
-PieChart(df_yahoo$Freq, hole = 0, values = "%", data = df_yahoo$Freq, fill = 1:54, main = "")
-pie = ggplot(df_yahoo, aes(x="", y=Freq, fill=Var1 )) + geom_bar(stat="identity", width=1)
+PieChart(df_gmail$Freq, hole = 0, values = "%", data = df_gmail$Freq, fill = 1:54, main = "")
+pie = ggplot(df_hotmail, aes(x="", y=Freq, fill=Var1 )) + geom_bar(stat="identity", width=1)
 pie = pie + coord_polar("y", start=0) + geom_text(aes(label = paste0(round((Freq/sum(Freq))*100), "%")), position = position_stack(vjust = 0.5))
-pie = pie + labs(x = NULL, y = NULL, fill = NULL, title = "Phones - Market Share")
+pie = pie + labs(x = NULL, y = NULL, fill = NULL, title = "Hotmail users across America")
 # Tidy up the theme
 pie = pie + theme_classic() + theme(axis.line = element_blank(),
           axis.text = element_blank(),
@@ -125,8 +125,17 @@ barplot(height = df_yahoo$Freq[order(df_yahoo$Freq)], ylim = c(0,10),name = df_y
 barplot(height = df_gmail$Freq[order(df_gmail$Freq)], ylim = c(0,10), name = df_yahoo$Var1, las =2)
 barplot(height = df_hotmail$Freq[order(df_hotmail$Freq)], ylim = c(0,10), name = df_yahoo$Var1, las =2)
 
+df_hotmail$Freq[order(df_hotmail$Freq)]
+df_gmail$Freq[order(df_gmail$Freq)]
+df_yahoo$Freq[order(df_yahoo$Freq)]
 
-# df_account_grp <- df_account %>% group_by(df_account$Var1, df_account$Var2)
-# df_account_grp
+df_hotmail$Var1[order(df_hotmail$Freq)]
+df_gmail$Var1[order(df_gmail$Freq)]
+df_yahoo$Var1[order(df_yahoo$Freq)]
 
-# ggplot(df_account_grp, aes(x=df_account$Freq)) + geom_bar(position = "dodge")
+df_account_grp <- df_account %>% group_by(df_account$Var1, df_account$Var2)
+df_account_grp
+sum(df_yahoo$Freq)
+sum(df_gmail$Freq)
+sum(df_hotmail$Freq)
+ggplot(df_account_grp, aes(x=df_account$Freq)) + geom_bar(position = "dodge")
