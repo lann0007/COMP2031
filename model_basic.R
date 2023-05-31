@@ -7,6 +7,8 @@ library(modelr)
 library(data.table)
 library(Metrics)
 library(factoextra)
+install.packages("rstatix")
+install.packages("factoextra")
 library(cluster)
 
 options(na.action =  na.warn)
@@ -108,9 +110,14 @@ for (i in 1:51){
 df_total[i,2] <- count(subset(df_dates, df_dates$bucket_start_date <= i+1965 & df_dates$bucket_end_date > i+1965))
 }
 
-df_years_mod <- glm(df_total$Count ~ df_total$Year, data = df_total)
+dt = sample(nrow(df_total), nrow(df_total)*.8)
+train<-df_total[dt,]
+test<-df_total[-dt,]
+
+df_years_mod <- glm(train$Count ~ train$Year, data = train)
 coef(df_years_mod)
 
+predicted_lim <- predict(lin_mod, test, type = 'response')
 
 grid <- df_total %>% data_grid(Year)
 grid <- grid %>% add_predictions(df_years_mod)
@@ -139,7 +146,7 @@ set.seed(2)
 df_cluster <- kmeans(df_total[,1:2], center=4, nstart=50)
 
 df_cluster
-
+df_shortened
 df_shortened <- df_total[,1:2]
 #required libraries for visualisation
 library(ggsignif)
