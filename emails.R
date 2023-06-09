@@ -4,6 +4,7 @@ library(lubridate)
 library(ggplot2)
 library(mongolite)
 library(lessR)
+library(usmap)
 connection_string = 'mongodb+srv://Lann0007:zw7Bi5ikPUbmwrqz@comp2031.x9dfsly.mongodb.net/?retryWrites=true&w=majority'
 
 
@@ -119,7 +120,99 @@ pie = pie + theme_classic() + theme(axis.line = element_blank(),
           axis.ticks = element_blank(),
           plot.title = element_text(hjust = 0.5, color = "#666666"))
 pie
-barplot(height = df_yahoo$Freq[order(df_yahoo$Freq)], ylim = c(0,10),name = df_yahoo$Var1, las =2)
+
+
+##################
+#### BARPLOTS
+##################
+
+
+# barplot(height = df_yahoo$Freq[order(df_yahoo$Freq)], ylim = c(0,10),name = df_yahoo$Var1, las =2) + 
+# legend(x = "topright",
+#        inset = c(-0.45, 0), # You will need to fine-tune the first
+#                             # value depending on the windows size
+#        legend = c(df_yahoo$Var1), 
+#        lty = c(1, 2),
+#        col = c(2, 3),
+#        lwd = 2,
+#        xpd = TRUE) 
+
+# barplot(height = df_hotmail$Freq[order(df_hotmail$Freq)], ylim = c(0,10),name = df_hotmail$Var1, las =2) + 
+# legend(x = "topright",
+#        inset = c(-0.45, 0), # You will need to fine-tune the first
+#                             # value depending on the windows size
+#        legend = c(df_hotmail$Var1), 
+#        lty = c(1, 2),
+#        col = c(2, 3),
+#        lwd = 2,
+#        xpd = TRUE) 
+
+# barplot(height = df_gmail$Freq[order(df_gmail$Freq)], ylim = c(0,10),name = df_gmail$Var1, las =2) + 
+# legend(x = "topright",
+#        inset = c(-0.45, 0), # You will need to fine-tune the first
+#                             # value depending on the windows size
+#        legend = c(df_gmail$Var1), 
+#        lty = c(1, 2),
+#        col = c(2, 3),
+#        lwd = 2,
+#        xpd = TRUE) 
+
+ggplot(df_yahoo, aes(y = df_yahoo$Freq[order(df_yahoo$Freq)], x = df_yahoo$Var1, fill = Var1)) +
+  geom_bar(stat = "identity") + 
+  scale_fill_grey()
+
+ggplot(df_yahoo, aes(y = df_gmail$Freq[order(df_gmail$Freq)], x = df_gmail$Var1, fill = Var1)) +
+  geom_bar(stat = "identity") + 
+  scale_fill_grey()
+  
+  ggplot(df_yahoo, aes(y = df_hotmail$Freq[order(df_hotmail$Freq)], x = df_hotmail$Var1, fill = Var1)) +
+  geom_bar(stat = "identity") + 
+  scale_fill_grey()
+
+##################
+#### HEATMAP ATTEMPT?
+##################
+
+#### YAHOO
+
+
+state = c("AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY")
+values = c()
+
+
+for(i in 1:length(state)){
+    values[i] <- df_yahoo$Freq[df_yahoo$Var1 == state[i]]
+}
+
+df_yahoo_rnm <- data.frame(state,values)
+
+plot_usmap(data = df_yahoo_rnm, values = "values" ) + 
+  scale_fill_continuous(name = "Total email accounts (yahoo)", label = scales::comma) + 
+  theme(legend.position = "right")
+
+
+for(i in 1:length(state)){
+    values[i] <- df_hotmail$Freq[df_hotmail$Var1 == state[i]]
+}
+
+df_hotmail_rnm <- data.frame(state,values)
+
+plot_usmap(data = df_hotmail_rnm, values = "values" ) + 
+  scale_fill_continuous(name = "Total email accounts (hotmail)", label = scales::comma) + 
+  theme(legend.position = "right")
+
+
+for(i in 1:length(state)){
+    values[i] <- df_gmail$Freq[df_gmail$Var1 == state[i]]
+}
+
+df_gmail_rnm <- data.frame(state,values)
+
+plot_usmap(data = df_gmail_rnm, values = "values" ) + 
+  scale_fill_continuous(name = "Total email accounts (gmail)", label = scales::comma) + 
+  theme(legend.position = "right")
+
+
 barplot(height = df_gmail$Freq[order(df_gmail$Freq)], ylim = c(0,10), name = df_yahoo$Var1, las =2)
 barplot(height = df_hotmail$Freq[order(df_hotmail$Freq)], ylim = c(0,10), name = df_yahoo$Var1, las =2)
 
