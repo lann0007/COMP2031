@@ -1,4 +1,4 @@
 # COMP2031
-![image](https://user-images.githubusercontent.com/94602309/234732478-0e287742-7176-4bd7-b607-e825ac7fe565.png)
+![nom](https://github.com/lann0007/COMP2031/assets/130717893/9edaf5f1-e223-4ea8-9f8f-58e2e87d3655)
 
 wooooo
