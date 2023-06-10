@@ -7,8 +7,7 @@ library(modelr)
 library(data.table)
 library(Metrics)
 library(factoextra)
-install.packages("rstatix")
-install.packages("factoextra")
+
 library(cluster)
 
 options(na.action =  na.warn)
@@ -157,46 +156,81 @@ df_total
 
 rmse(sim1$Count, sim1$pred)
 
+##################
+##### DATA WRANGLING FOR CLUSTERING
+#################
 
+customer_entries = mongo(collection= "customers", db = "sample_analytics", url = connection_string)
 
+customer_entries <- customer_entries$aggregate('[{"$project":{"address": 1, "email": 1, "birthdate": 1 }}]')
+
+df_account <- as.data.frame(customer_entries)
+
+df_account$email <- gsub(".*@", "",df_account$email)
+df_account$birthdate <- format(as.Date(df_account$birthdate, format="%d-%m-%Y"),"%Y")
+state = c("AA","AE","AL","AK","AP","AZ","AR","CA","CO","CT","DC","DE","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY")
+df_temp <- df_account
+for (i in 1:nrow(df_account)){
+    df_account$address[i] <- str_extract(df_account$address[i], "\\b[A-Z]{2}\\b", group = NULL)
+    df_temp$address[i] <- df_account$address[i]
+    df_account$address[i] <- as.numeric(which(df_account$address[i] == state)) 
+}
+df_temp
+df_table <- table(df_account$address, df_account$email)
+
+df_account <- as.data.frame(df_table)
+
+df_account$Freq <- scale(df_account$Freq)
+df_account <- na.omit(df_account)
+df_account <- df_account %>% select(-Var2)
+class(df_account$Freq)
+ 
+df_account$Var1 <- as.numeric(unlist(df_account$Var1))
 ##################
 ##### K-Means Clustering
 #################
 
+#determine optimal amount of clusters
+df_account <- scale(df_account)
+fviz_nbclust(df_account, kmeans, method = "wss")
+
 set.seed(2)
-df_cluster <- kmeans(df_total[,1:2], center=4, nstart=50)
+df_cluster <- kmeans(df_account[,2:1], center=3, nstart=50)
 
-df_cluster
-df_shortened
-df_shortened <- df_total[,1:2]
-#required libraries for visualisation
-library(ggsignif)
-library(rstatix)
+# df_cluster
 
-fviz_cluster(df_cluster, data = scale(df_shortened))
+# #required libraries for visualisation
+# library(ggsignif)
+# library(rstatix)
 
-df_total$Cluster <- df_cluster$cluster
-df_total$Cluster <- factor(df_total$Cluster)
+# df_account$Cluster <- df_cluster$cluster
+# df_account$Cluster <- factor(df_account$Cluster)
 
-view(df_total)
+# df_account_vis <- df_account
+# for (i in 1:nrow(df_account)){
+#     df_account$address[i] <- state[df_account$Var1[i]] 
+# }
 
-ggplot(df_total, aes(Year,Count)) + geom_point(aes(col=Cluster), size = 4)
+
+fviz_cluster(df_cluster, data = df_account)
+# df_account
+# ggplot(df_account_vis, aes(address,Freq)) + geom_point(aes(col=Cluster), size = 4)
 
 ##################
 ##### K-Medoid Clustering
 #################
+fviz_nbclust(df_account, pam, method = "wss")
 
-PAM = pam(df_shortened, 4, metric = "euclidean", stand = FALSE)
-fviz_nbclust(df_shortened, pam, method = "wss")
-gap_stat <- clusGap(df_shortened,
+PAM = pam(df_account, 4, metric = "euclidean", stand = FALSE)
+gap_stat <- clusGap(as.matrix(df_account),
                     FUN = pam,
                     K.max = 10, #max clusters to consider
                     B = 50) #total bootstrapped iterations
 
 fviz_gap_stat(gap_stat)
 
-fviz_cluster(PAM, data = df_shortened)
-
+fviz_cluster(PAM, data = df_account)
+class(PAM)
 ##################
 ##### Heirarchical Clustering
 #################
@@ -206,36 +240,36 @@ names(m) <- c( "average", "single", "complete", "ward")
 
 
 ac <- function(x) {
-  agnes(df_shortened, method = x)$ac
+  agnes(df_account, method = x)$ac
 }
 
 sapply(m, ac)
 
-clust <- agnes(df_shortened, method = "ward")
+clust <- agnes(df_account, method = "ward")
 
 #produce dendrogram
 pltree(clust, cex = 0.6, hang = -1, main = "Dendrogram") 
 
 
-gap_stat <- clusGap(df_shortened, FUN = hcut, nstart = 25, K.max = 10, B = 50)
+gap_stat <- clusGap(df_account, FUN = hcut, nstart = 25, K.max = 10, B = 50)
 
 #produce plot of clusters vs. gap statistic
 fviz_gap_stat(gap_stat)
 
 
-d <- dist(df_shortened, method = "euclidean")
+d <- dist(df_account, method = "euclidean")
 
 #perform hierarchical clustering using Ward's method
 final_clust <- hclust(d, method = "ward.D2" )
-
+final_clust
 #cut the dendrogram into 4 clusters
 groups <- cutree(final_clust, k = 5)
 
-final_data <- cbind(df_shortened, cluster = groups)
+final_data <- cbind(df_account, cluster = groups)
 final_data                              
 
 ggplot(final_data, aes(Year,Count)) + geom_point(aes(col=cluster), size = 4)
-
+fviz_cluster(PAM, data = final_data)
 
 #find number of observations in each cluster
 table(groups)
