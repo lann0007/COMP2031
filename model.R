@@ -20,7 +20,7 @@ account_types = customer_entries$aggregate('[{"$project":{"name": 1 ,"address": 
 user_types = customer_entries$aggregate('[{"$group":{"_id":"$usertype", "Count": {"$sum":1}}}]')
 
 df <- as_tibble(account_types)
-
+df
 addresses <- df %>% pull(address)
 addresses <- as.data.frame(addresses)
 addresses[c("first section","second section")] <- str_split_fixed(addresses$address, ', ',2)
@@ -107,6 +107,8 @@ plot(y)
 # scatterplot matrix
 featurePlot(x=x, y=y, plot="ellipse")
 
+head(x)
+head(y)
 # box and whisker plots for each attribute
 featurePlot(x=x, y=y, plot="box")
 
@@ -135,7 +137,7 @@ fit.svm <- train(Species~., data=dataset, method="svmRadial", metric=metric, trC
 # Random Forest
 set.seed(7)
 fit.rf <- train(Species~., data=dataset, method="rf", metric=metric, trControl=control)
-
+dataset$Species
 # summarize accuracy of models
 results <- resamples(list(lda=fit.lda, cart=fit.cart, knn=fit.knn, svm=fit.svm, rf=fit.rf))
 summary(results)
@@ -144,3 +146,5 @@ print(fit.knn)
 
 predictions <- predict(fit.knn, validation)
 confusionMatrix(predictions, validation$Species)
+head(predictions)
+head(validation$Species)

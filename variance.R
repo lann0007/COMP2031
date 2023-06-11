@@ -24,3 +24,5 @@ df_customer
 
 max(df_customer$age, na.rm=TRUE) - min(df_customer$age, na.rm = TRUE)
 boxplot(df_customer$age)
+
+barplot(height = df_customer$age, name = df_customer$year)
