@@ -1,0 +1,51 @@
+# to count amount of 'buy'
+df_buy <- as.data.frame(transactions_collection)
+buy <- apply(df_buy, 2, grepl, pattern = "buy")
+buy_count <- table(buy)
+barplot(buy, main = "Buy Count", xlab = "Column", ylab = "Count")
+
+# to count amount of 'sell'
+df_sell <- as.data.frame(transactions_collection)
+sell <- apply(df_sell, 2, grepl, pattern = "sell")
+sell_count <- table(sell)
+barplot(sell, main = "Sell Count", xlab = "Column", ylab = "Count")
+
+#not sure if these are right, they give same results >
+#buy per state
+df_state_buy <- as.data.frame(transactions_collection)
+has_state_buy <- apply(df_state_buy, 2, grepl, pattern = "buy")
+addresses <- df_state_buy[apply(has_state_buy, 1, any), "address"]
+regex <- "\\b[A-Z]{2}\\b"
+state_codes <- unlist(str_extract_all(addresses, regex))
+buy_state_counts <- table(state_codes)
+barplot(buy_state_counts, main = "Buy per state", xlab = "State Code", ylab = "Count", las = 2)
+
+#heatmap 
+buy_state_data <- data.frame(
+  state = c("AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY"),
+  value = c(3,3,1,3,1,1,1,2,2,1,4,1,1,1,1,3,4,2,1,5,2,2,4,2,2,3,6,2,1,1,3,1,2,4,1,1,2,2,1,1,3,2,5,2,1,3,0,0,0,0))
+
+plot_usmap(data = buy_state_data, values = "value", color = "red") + 
+  scale_fill_continuous(
+    low = "white", high = "red", name = "buy per state", label = scales::comma
+  ) + theme(legend.position = "right")
+
+
+#sell per state
+df_state_sell <- as.data.frame(transactions_collection)
+has_state_sell <- apply(df_state_sell, 2, grepl, pattern = "sell")
+addresses <- df_state_sell[apply(has_state_sell, 1, any), "address"]
+regex <- "\\b[A-Z]{2}\\b"
+state_codes <- unlist(str_extract_all(addresses, regex))
+sell_state_counts <- table(state_codes)
+barplot(sell_state_counts, main = "sell per state", xlab = "State Code", ylab = "Count", las = 2)
+
+#heatmap 
+sell_state_data <- data.frame(
+  state = c("AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY"),
+  value = c(3,3,1,3,1,1,1,2,2,1,4,1,1,1,1,3,4,2,1,5,2,2,4,2,2,3,6,2,1,1,3,1,2,4,1,1,2,2,1,1,3,2,5,2,1,3,0,0,0,0))
+
+plot_usmap(data = sell_state_data, values = "value", color = "red") + 
+  scale_fill_continuous(
+    low = "white", high = "red", name = "sell per state", label = scales::comma
+  ) + theme(legend.position = "right")
